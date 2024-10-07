@@ -14,9 +14,12 @@ export default function useTable(getTableDataApi: GetPageApi, options: Options) 
   const tableLoading = ref(false);
   //  表格数据
   const tableData = ref([] as any[]);
+  const queryParam = ref({});
   // 获取数据
   const getData = async (page = currentPage.value, size = pageSize.value, query: any = {}) => {
     tableLoading.value = true;
+    // 保存查询参数
+    queryParam.value = query;
     try {
       const data = await getTableDataApi({ currentPage: page, pageSize: size, query });
       tableData.value = data.records;
@@ -39,9 +42,18 @@ export default function useTable(getTableDataApi: GetPageApi, options: Options) 
     onChange: pageChange
   } = usePagination(getData, options.paginationOption);
   // 查询
-  const search = () => {
+  const search = (query = {}) => {
     currentPage.value = 1;
-    getData();
+    getData(currentPage.value, pageSize.value, query);
+  };
+  // 刷新
+  const refresh = () => getData(currentPage.value, pageSize.value, queryParam.value);
+  // 重置
+  const reset = () => {
+    currentPage.value = 1;
+    pageSize.value = 10;
+    queryParam.value = {};
+    getData(currentPage.value, pageSize.value, queryParam.value);
   };
   // 立即执行
   options.immediate && getData();
@@ -52,6 +64,8 @@ export default function useTable(getTableDataApi: GetPageApi, options: Options) 
     tableLoading,
     tableData,
     search,
+    refresh,
+    reset,
     pageChange
   };
 }

@@ -1,9 +1,16 @@
 <template>
   <div class="home">
-    <el-table :data="tableData" v-loading="tableLoading">
-      <el-table-column prop="salesOrderNo" label="订单号1" />
+    <BaseTable :data="tableData" :refresh="refresh" :full-screen-selector="'.home'" v-loading="tableLoading">
+      <el-table-column prop="id" label="ID">
+        <template #default="scope">
+          <span>aaa-{{ scope.row.id }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="salesOrderNo" label="订单号" />
-    </el-table>
+      <template #empty>
+        <el-empty description="暂无数据" />
+      </template>
+    </BaseTable>
     <el-pagination layout="prev, pager, next,jumper,total" :page-size="pageSize" :total="total" @change="pageChange" />
   </div>
 </template>
@@ -12,8 +19,9 @@
 import { getCount, getPage } from "@/api/home";
 import { onMounted, reactive } from "vue";
 import useTable from "@/hook/useTable";
+import BaseTable from "@/components/BaseTable.vue";
 
-const { pageSize, currentPage, tableLoading, tableData, search, pageChange, total } = useTable(getPage, {
+const { pageSize, refresh, tableLoading, tableData, search, pageChange, total } = useTable(getPage, {
   immediate: true
 });
 
