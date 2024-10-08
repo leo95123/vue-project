@@ -1,6 +1,10 @@
 <template>
-  <el-config-provider :locale="locale">
-    <RouterView />
+  <el-config-provider :locale="locale" size="small">
+    <el-container>
+      <el-main>
+        <RouterView />
+      </el-main>
+    </el-container>
   </el-config-provider>
 </template>
 
@@ -10,4 +14,9 @@ import { ref } from "vue";
 const locale = ref(zhCn);
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+:deep(.el-pagination) {
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+</style>

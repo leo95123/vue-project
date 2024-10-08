@@ -4,7 +4,7 @@
       <slot name="left"></slot>
     </div>
     <div class="right">
-      <slot name="right"></slot>
+      <el-space><slot name="right"></slot></el-space>
     </div>
   </div>
 </template>
@@ -16,5 +16,11 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  .right {
+    display: flex;
+    :deep(.el-form-item) {
+      margin-right: 0;
+    }
+  }
 }
 </style>

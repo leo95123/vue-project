@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import usePagination from "./usePagination";
 import type { Options as paginationOptions } from "./usePagination";
+import type { ElForm } from "element-plus";
 
 interface Options {
   onSuccess?: () => void;
@@ -49,7 +50,8 @@ export default function useTable(getTableDataApi: GetPageApi, options: Options) 
   // 刷新
   const refresh = () => getData(currentPage.value, pageSize.value, queryParam.value);
   // 重置
-  const reset = () => {
+  const reset = (formRef?: InstanceType<typeof ElForm>) => {
+    formRef && formRef.resetFields();
     currentPage.value = 1;
     pageSize.value = 10;
     queryParam.value = {};
