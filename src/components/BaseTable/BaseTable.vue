@@ -2,10 +2,13 @@
   <div class="base-table" ref="baseTableRef">
     <!-- 表格操作 -->
     <div class="table-operation">
-      <div class="left-operation"></div>
+      <div class="left-operation">
+        <slot name="left-operation"></slot>
+      </div>
       <div class="right-operation">
+        <slot v-if="slots['right-operation']" name="right-operation"></slot>
         <!-- 刷新 列设置 全屏 -->
-        <el-space>
+        <el-space v-else>
           <el-button icon="RefreshRight" title="刷新" @click="refresh"></el-button>
           <el-dropdown trigger="click">
             <el-button icon="Setting" title="列设置"></el-button>
