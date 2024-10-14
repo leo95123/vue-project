@@ -1,23 +1,24 @@
 <template>
   <div class="home">
-    <el-form ref="formRef" size="small" :model="form" inline>
-      <SearchHeader>
-        <template #left>
-          <el-form-item prop="salesOrderNo" label="订单号:">
-            <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
-          </el-form-item>
-          <el-form-item prop="salesOrderNo" label="订单号:">
-            <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
-          </el-form-item>
-        </template>
-        <template #right>
-          <el-form-item>
-            <el-button type="primary" @click="search(form)">查询</el-button>
-            <el-button @click="reset(formRef)">重置</el-button>
-          </el-form-item>
-        </template>
-      </SearchHeader>
-    </el-form>
+    <SearchHeader :reset="reset" :form="form" :search="search" show-hide-condition>
+      <template #left>
+        <el-form-item prop="salesOrderNo" label="订单号:">
+          <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
+        </el-form-item>
+        <el-form-item prop="salesOrderNo" label="订单号:">
+          <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
+        </el-form-item>
+        <el-form-item prop="salesOrderNo" label="订单号:">
+          <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
+        </el-form-item>
+      </template>
+      <template #hide-left>
+        <el-form-item prop="salesOrderLineNo" label="订单行号:">
+          <el-input placeholder="请输入" v-model="form.salesOrderLineNo"></el-input>
+        </el-form-item>
+      </template>
+    </SearchHeader>
+
     <BaseTable
       :data="tableData"
       full-screen-selector=".home"
@@ -43,7 +44,6 @@ import { onMounted, ref, reactive } from "vue";
 import useTable from "@/hook/useTable";
 import SearchHeader from "@/components/SearchHeader.vue";
 import BaseTable from "@/components/BaseTable/BaseTable.vue";
-import type { ElForm } from "element-plus";
 
 const cloumns = ref<ColumnType[]>([
   { prop: "id", label: "ID", width: 300 },
@@ -60,9 +60,9 @@ const cloumns = ref<ColumnType[]>([
 ]);
 
 const form = reactive({
-  salesOrderNo: ""
+  salesOrderNo: "",
+  salesOrderLineNo: ""
 });
-const formRef = ref<InstanceType<typeof ElForm>>();
 const { pageSize, refresh, tableLoading, tableData, reset, search, pageChange, total } = useTable(getPage, {
   immediate: true
 });
