@@ -6,7 +6,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import vueDevTools from "vite-plugin-vue-devtools";
 
 // 模拟环境
-const server = "http://imc.test.lg.china-yongfeng.com/imc/laboratory";
+const server = "http://www.abc.com/imc/laboratory";
 
 // https://vitejs.dev/config/
 export default defineConfig({
