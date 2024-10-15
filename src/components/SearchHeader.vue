@@ -42,7 +42,7 @@ const formRef = ref<InstanceType<typeof ElForm>>();
 const props = withDefaults(
   defineProps<{
     showHideCondition?: boolean; // 默认是否显示隐藏的筛选条件
-    form?: any; // 表单
+    form: any; // 表单
     reset?: Function; // 重置
     search?: Function; // 查询
   }>(),

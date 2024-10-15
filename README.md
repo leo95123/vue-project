@@ -84,25 +84,24 @@ onMounted(() => {
 ```vue
 <template>
   <div class="home">
-    <el-form ref="formRef" size="small" :model="form" inline>
-      <!-- 查询 -->
-      <SearchHeader>
-        <template #left>
-          <el-form-item prop="salesOrderNo" label="订单号:">
-            <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
-          </el-form-item>
-          <el-form-item prop="salesOrderNo" label="订单号:">
-            <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
-          </el-form-item>
-        </template>
-        <template #right>
-          <el-form-item>
-            <el-button type="primary" @click="search(form)">查询</el-button>
-            <el-button @click="reset(formRef)">重置</el-button>
-          </el-form-item>
-        </template>
-      </SearchHeader>
-    </el-form>
+    <SearchHeader :reset="reset" :form="form" :search="search" show-hide-condition>
+      <template #left>
+        <el-form-item prop="salesOrderNo" label="订单号:">
+          <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
+        </el-form-item>
+        <el-form-item prop="salesOrderNo" label="订单号:">
+          <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
+        </el-form-item>
+        <el-form-item prop="salesOrderNo" label="订单号:">
+          <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
+        </el-form-item>
+      </template>
+      <template #hide-left>
+        <el-form-item prop="salesOrderLineNo" label="订单行号:">
+          <el-input placeholder="请输入" v-model="form.salesOrderLineNo"></el-input>
+        </el-form-item>
+      </template>
+    </SearchHeader>
     <BaseTable
       :data="tableData"
       full-screen-selector=".home"
@@ -130,7 +129,6 @@ import { onMounted, ref, reactive } from "vue";
 import useTable from "@/hook/useTable";
 import SearchHeader from "@/components/SearchHeader.vue";
 import BaseTable from "@/components/BaseTable/BaseTable.vue";
-import type { ElForm } from "element-plus";
 
 // 表格列
 const cloumns = ref<ColumnType[]>([
@@ -152,7 +150,6 @@ const cloumns = ref<ColumnType[]>([
 const form = reactive({
   salesOrderNo: ""
 });
-const formRef = ref<InstanceType<typeof ElForm>>();
 const { pageSize, refresh, tableLoading, tableData, reset, search, pageChange, total } = useTable(getPage, {
   immediate: true
 });
@@ -197,3 +194,49 @@ const cloumns = ref<ColumnType[]>([
 1. append, empty 同el-table
 2. left-operation 左侧操作
 3. right-operation 右侧操作，默认有刷新，列设置，全屏。传入此slot 将不会有默认操作
+
+#### BaseTable 默认操作
+
+1. 刷新：需要传入刷新方法
+2. 列设置: 包含列排序和列显示，可操作的列不包含子列和空表头
+3. 全屏：需要传入全屏容器，否则全屏整个表格
+
+### SearchHeader 查询条件组件
+
+```vue
+<template>
+  <SearchHeader :reset="reset" :form="form" :search="search" show-hide-condition>
+    <!-- 左侧查询条件内容 -->
+    <template #left>
+      <el-form-item prop="salesOrderNo" label="订单号:">
+        <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
+      </el-form-item>
+      <el-form-item prop="salesOrderNo" label="订单号:">
+        <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
+      </el-form-item>
+      <el-form-item prop="salesOrderNo" label="订单号:">
+        <el-input placeholder="请输入" v-model="form.salesOrderNo"></el-input>
+      </el-form-item>
+    </template>
+    <!-- 可隐藏的左侧搜索条件 -->
+    <template #hide-left>
+      <el-form-item prop="salesOrderLineNo" label="订单行号:">
+        <el-input placeholder="请输入" v-model="form.salesOrderLineNo"></el-input>
+      </el-form-item>
+    </template>
+  </SearchHeader>
+</template>
+```
+
+#### SearchHeader 参数
+
+1. reset?: Function 重置方法
+2. form: any 表单
+3. search?: Function 查询方法
+4. showHideCondition?:boolean 默认是否显示隐藏的筛选条件
+
+#### SearchHeader 插槽
+
+1. left: 左侧查询条件
+2. hide-left: 可隐藏的左侧查询条件
+3. right: 右侧查询条件, 默认查询和重置，传入此slot 将不会有默认操作

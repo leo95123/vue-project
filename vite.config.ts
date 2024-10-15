@@ -16,6 +16,13 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url))
     }
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern" // 解决控制台sass 升级警告
+      }
+    }
+  },
   server: {
     // WSL 热更新
     watch: {
@@ -27,7 +34,7 @@ export default defineConfig({
       "/order/process/api": {
         target: server,
         changeOrigin: true,
-        rewrite: (path) => {
+        rewrite: path => {
           const newPath = path.replace(/^\/imc\/laboratory\/order\/process\/api/, "/order/process/api");
           return newPath;
         }
@@ -36,7 +43,7 @@ export default defineConfig({
       "/specification/manage/api": {
         target: server,
         changeOrigin: true,
-        rewrite: (path) => {
+        rewrite: path => {
           const newPath = path.replace(/^\/imc\/laboratory\/specification\/manage\/api/, "/specification/manage/api");
           return newPath;
         }
