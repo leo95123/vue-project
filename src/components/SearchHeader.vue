@@ -4,7 +4,7 @@
       <div class="left">
         <slot name="left"></slot>
         <!-- 可隐藏的筛选条件 -->
-        <template v-if="slots['hide-left']">
+        <template v-if="$slots['hide-left']">
           <el-form-item>
             <!-- 按钮 -->
             <el-space :size="4" class="show-hide-left-btn" @click="showHideLeft = !showHideLeft">
@@ -21,7 +21,7 @@
         </template>
       </div>
       <div class="right">
-        <el-space v-if="slots['right']">
+        <el-space v-if="$slots['right']">
           <slot name="right"></slot>
         </el-space>
         <el-form-item v-else>
@@ -34,31 +34,30 @@
 </template>
 
 <script setup lang="ts">
-import { useSlots, ref } from "vue";
+import { ref } from "vue";
 import type { ElForm } from "element-plus";
-const slots = useSlots();
 const formRef = ref<InstanceType<typeof ElForm>>();
 
-const props = withDefaults(
-  defineProps<{
-    showHideCondition?: boolean; // 默认是否显示隐藏的筛选条件
-    form: any; // 表单
-    reset?: Function; // 重置
-    search?: Function; // 查询
-  }>(),
-  {
-    showHideCondition: false
-  }
-);
-const showHideLeft = ref(props.showHideCondition);
+const {
+  showHideCondition = false,
+  form,
+  reset,
+  search
+} = defineProps<{
+  showHideCondition?: boolean; // 默认是否显示隐藏的筛选条件
+  form: any; // 表单
+  reset?: Function; // 重置
+  search?: Function; // 查询
+}>();
+const showHideLeft = ref(showHideCondition);
 // 查询
 const onSearch = () => {
-  props.search && props.search(props.form);
+  search && search(form);
 };
 // 重置
 const onReset = () => {
   formRef.value?.resetFields();
-  props.reset && props.reset();
+  reset && reset();
 };
 </script>
 <style lang="scss" scoped>

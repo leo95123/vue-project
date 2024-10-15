@@ -6,7 +6,7 @@
         <slot name="left-operation"></slot>
       </div>
       <div class="right-operation">
-        <slot v-if="slots['right-operation']" name="right-operation"></slot>
+        <slot v-if="$slots['right-operation']" name="right-operation"></slot>
         <!-- 刷新 列设置 全屏 -->
         <el-space v-else>
           <el-button icon="RefreshRight" title="刷新" @click="refresh"></el-button>
@@ -45,8 +45,8 @@
         <slot name="empty"></slot>
       </template>
       <BaseTableColumn :columns="renderColumns">
-        <template v-for="(value, key) in slots" #[key]="slotProps" :key="key">
-          <slot v-if="key && slots[key]" :name="key" v-bind="slotProps"></slot>
+        <template v-for="(value, key) in $slots" #[key]="slotProps" :key="key">
+          <slot v-if="key && $slots[key]" :name="key" v-bind="slotProps"></slot>
         </template>
       </BaseTableColumn>
     </el-table>
@@ -55,33 +55,29 @@
 
 <script setup lang="ts">
 import type { ColumnType } from "./types";
-import { useAttrs, ref, useSlots, computed } from "vue";
+import { ref, computed } from "vue";
 import { api as fullscreen } from "vue-fullscreen";
 import IconDrap from "@/assets/icons/IconDrag.vue";
 import BaseTableColumn from "./BaseTableColumn";
 import { VueDraggable } from "vue-draggable-plus";
 
-const props = withDefaults(
-  defineProps<{
-    columns: ColumnType[];
-    refresh: Function;
-    fullScreenSelector?: string; // 全屏容器
-  }>(),
-  {
-    columns: () => [],
-    refresh: () => {},
-    fullScreenSelector: () => ""
-  }
-);
-const $attrs = useAttrs(); // 属性
-const slots = useSlots();
+const {
+  columns = [],
+  refresh,
+  fullScreenSelector
+} = defineProps<{
+  columns: ColumnType[];
+  refresh: Function;
+  fullScreenSelector?: string; // 全屏容器
+}>();
+
 const baseTableRef = ref(); // 表格容器
 const tableRef = ref(); // 表格实例
 const dropColumns = ref<ColumnType[]>([]);
 const checkedColumnIdList = ref<(string | undefined)[]>([]); // 选中列
 // 重置列
 const resetColumns = () => {
-  dropColumns.value = props.columns
+  dropColumns.value = columns
     .map((item, index) => {
       item.customId = `${item.prop}-${index}`;
       return item;
@@ -93,7 +89,7 @@ resetColumns();
 
 // 重新计算表格列
 const renderColumns = computed(() => {
-  const filteredColumns = props.columns.filter((item: ColumnType) => checkedColumnIdList.value.includes(item.customId));
+  const filteredColumns = columns.filter((item: ColumnType) => checkedColumnIdList.value.includes(item.customId));
   // 根据自定义列排序，即根据dropColumns的顺序
   filteredColumns.sort((a, b) => dropColumns.value.indexOf(a) - dropColumns.value.indexOf(b));
   return filteredColumns;
@@ -101,9 +97,9 @@ const renderColumns = computed(() => {
 // 全屏
 const fullScreen = () => {
   let el = baseTableRef.value;
-  if (props.fullScreenSelector) {
+  if (fullScreenSelector) {
     // 如果没传容器，就全屏整个表格
-    el = document.querySelector(props.fullScreenSelector) as HTMLElement;
+    el = document.querySelector(fullScreenSelector) as HTMLElement;
   }
   fullscreen.toggle(el, {
     pageOnly: true,

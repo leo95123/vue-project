@@ -33,7 +33,13 @@
         <el-tag>测试-{{ scope.row.qualityClass }}</el-tag>
       </template>
     </BaseTable>
-    <el-pagination layout="prev, pager, next,jumper,total" :page-size="pageSize" :total="total" @change="pageChange" />
+    <el-pagination
+      layout="prev, pager, next,jumper,total,sizes"
+      :page-sizes="[10, 15, 20, 30]"
+      v-model:page-size="pageSize"
+      :total="total"
+      @change="pageChange"
+    />
   </div>
 </template>
 
