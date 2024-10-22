@@ -2,12 +2,6 @@ import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { parseAccountTokenOfUrl } from "./token";
 import { ElNotification } from "element-plus";
-
-type Result<T> = {
-  code: number;
-  message: string;
-  data: T;
-};
 interface RequestConfig extends AxiosRequestConfig {
   // 是否显示全局loading
   showGlobalLoading?: boolean;
@@ -39,7 +33,7 @@ export class Request {
         }
         return config;
       },
-      (error) => {
+      error => {
         // 全局错误提示
         if (config.showGlobalErrorMessage) {
           ElNotification({
@@ -73,7 +67,7 @@ export class Request {
           return Promise.reject(data);
         }
       },
-      (error) => {
+      error => {
         // 全局错误提示
         if (config.showGlobalErrorMessage) {
           ElNotification({
